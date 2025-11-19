@@ -16,18 +16,29 @@ jobs:
           persist-credentials: true
           fetch-depth: 0
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
       - name: Generate GitHub Contribution Snake
         uses: Platane/snk/svg-only@v3
         with:
           github_user_name: ${{ github.repository_owner }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          output_file: github-contribution-grid-snake.svg
+          include_private: true
+          theme: react-dark
 
       - name: Commit and push SVG
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -B output
-          mv dist/github-contribution-grid-snake.svg github-contribution-grid-snake.svg
-          git add github-contribution-grid-snake.svg
-          git commit -m "Update contribution snake"
-          git push --force --set-upstream origin output
+          if [ -f github-contribution-grid-snake.svg ]; then
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git checkout -B output
+            git add github-contribution-grid-snake.svg
+            git commit -m "Update contribution snake"
+            git push --force --set-upstream origin output
+          else
+            echo "SVG not generated, skipping commit"
+          fi
