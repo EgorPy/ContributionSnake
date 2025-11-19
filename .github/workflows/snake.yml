@@ -16,19 +16,12 @@ jobs:
           persist-credentials: true
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
       - name: Generate GitHub Contribution Snake
         uses: Platane/snk/svg-only@v3
         with:
           github_user_name: ${{ github.repository_owner }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          output_file: github-contribution-grid-snake.svg
-          include_private: true
-          theme: react-dark
+          outputs: github-contribution-grid-snake.svg
 
       - name: Commit and push SVG
         run: |
